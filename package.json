@@ -1,7 +1,7 @@
 {
     "name": "sfdx-destruction",
     "description": "Destructive changes support for sfdx force:source:deploy",
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.2",
     "author": "Andrew Goodman",
     "bugs": "https://github.com/gdman/sfdx-destruction/issues",
     "dependencies": {
