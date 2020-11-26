@@ -1,58 +1,81 @@
 sfdx-destruction
 ================
 
-Destructive changes support for sfdx force:source:deploy
+Destructive changes support for `sfdx force:source:deploy` via a predeploy hook.
+
+At time of writing, the `sfdx force:source:deploy` command doesn't support destructive changes files out of the box. Therefore if deletions are required, either source metadata needs to be converted for use with `sfdx force:mdapi:deploy` or there'll need to be multiple deployments (with downtime, difficult rollbacks and multiple unit test cycles).
+
+This simple plugin hooks into source deploy and drops `destructiveChangesPre.xml` and/or `destructiveChangesPost.xml` deletions manifests into the package before the deployment initiates.
 
 [![Version](https://img.shields.io/npm/v/sfdx-destruction.svg)](https://npmjs.org/package/sfdx-destruction)
-[![CircleCI](https://circleci.com/gh/gdman/sfdx-destruction/tree/master.svg?style=shield)](https://circleci.com/gh/gdman/sfdx-destruction/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/gdman/sfdx-destruction?branch=master&svg=true)](https://ci.appveyor.com/project/heroku/sfdx-destruction/branch/master)
-[![Codecov](https://codecov.io/gh/gdman/sfdx-destruction/branch/master/graph/badge.svg)](https://codecov.io/gh/gdman/sfdx-destruction)
-[![Greenkeeper](https://badges.greenkeeper.io/gdman/sfdx-destruction.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/gdman/sfdx-destruction/badge.svg)](https://snyk.io/test/github/gdman/sfdx-destruction)
 [![Downloads/week](https://img.shields.io/npm/dw/sfdx-destruction.svg)](https://npmjs.org/package/sfdx-destruction)
 [![License](https://img.shields.io/npm/l/sfdx-destruction.svg)](https://github.com/gdman/sfdx-destruction/blob/master/package.json)
 
-<!-- toc -->
-* [Debugging your plugin](#debugging-your-plugin)
-<!-- tocstop -->
-<!-- install -->
-<!-- usage -->
-```sh-session
-$ npm install -g sfdx-destruction
-$ sfdx COMMAND
-running command...
-$ sfdx (-v|--version|version)
-sfdx-destruction/0.0.0 darwin-x64 node-v12.9.0
-$ sfdx --help [COMMAND]
-USAGE
-  $ sfdx COMMAND
-...
-```
-<!-- usagestop -->
-<!-- commands -->
+# Installation
 
-<!-- commandsstop -->
-<!-- debugging-your-plugin -->
-# Debugging your plugin
-We recommend using the Visual Studio Code (VS Code) IDE for your plugin development. Included in the `.vscode` directory of this plugin is a `launch.json` config file, which allows you to attach a debugger to the node process when running your commands.
-
-To debug the `hello:org` command: 
-1. Start the inspector
-  
-If you linked your plugin to the sfdx cli, call your command with the `dev-suspend` switch: 
 ```sh-session
-$ sfdx hello:org -u myOrg@example.com --dev-suspend
-```
-  
-Alternatively, to call your command using the `bin/run` script, set the `NODE_OPTIONS` environment variable to `--inspect-brk` when starting the debugger:
-```sh-session
-$ NODE_OPTIONS=--inspect-brk bin/run hello:org -u myOrg@example.com
+$ sfdx plugins:install sfdx-destruction
 ```
 
-2. Set some breakpoints in your command code
-3. Click on the Debug icon in the Activity Bar on the side of VS Code to open up the Debug view.
-4. In the upper left hand corner of VS Code, verify that the "Attach to Remote" launch configuration has been chosen.
-5. Hit the green play button to the left of the "Attach to Remote" launch configuration window. The debugger should now be suspended on the first line of the program. 
-6. Hit the green play button at the top middle of VS Code (this play button will be to the right of the play button that you clicked in step #5).
-<br><img src=".images/vscodeScreenshot.png" width="480" height="278"><br>
-Congrats, you are debugging!
+# Usage
+
+```sh-session
+$ SFDX_DESTRUCTION_ENABLE=true sfdx force:source:deploy
+```
+
+# Configuration
+
+Destructive changes functionality is disabled by default and therefore must be enabled by environment variable or in the project configuration file.
+
+If the `SFDX_DESTRUCTION_ENABLE` environment variable is set, it will be used to determine whether to run the plugin (true or false and regardless of configuration file settings).
+Else the `plugins` -> `sfdx-destruction` -> `enabledByDefault` variable in the project configuration file will be used (if set).
+If neither is configured, the plugin will remain disabled.
+
+The locations of the pre and post destructive changes files can also be specified by environment variable and/or configuration file. Environment variables take precedence over the configuration file. If neither is present, the plugin will have no effect.
+
+Recommended usage is to use the configuration file to store the locations of the destructive changes files and the environment variable to enable at build time.
+
+## Environment Variables
+
+`SFDX_DESTRUCTION_ENABLE` - true or false to enable or disable the plugin
+
+`SFDX_DESTRUCTIVE_PRE_FILE` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
+
+`SFDX_DESTRUCTIVE_POST_FILE` - path to the destructive changes post file i.e. deletions that will occur after the deployment
+
+## Project Configuration File (sfdx-project.json)
+
+`enabledByDefault` - true or false - will be used to determine whether the plugin should run if no environment variable is present (default: false - disabled)
+
+`destructiveChangesPreFile` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
+
+`destructiveChangesPostFile` - path to the destructive changes post file i.e. deletions that will occur after the deployment
+
+### Example:
+```json
+{
+  "packageDirectories": [
+    {
+      "default": true,
+      "path": "force-app"
+    }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "50.0",
+  "plugins": {
+    "sfdx-destruction": {
+      "enabledByDefault": false,
+      "destructiveChangesPreFile": "{path-to-destructiveChangesPre.xml}",
+      "destructiveChangesPostFile": "{path-to-destructiveChangesPost.xml}"
+    }
+  }
+}
+```
+
+# Can I enable the plugin by command line argument?
+
+No, unfortunately not.
+
+This functionality is implemented as a hook and although it is possible to access argv, it doesn't seem to be possible to define additional arguments. Passing in an extra argument will return an error of `Unexpected argument`.
