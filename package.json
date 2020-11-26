@@ -1,7 +1,7 @@
 {
     "name": "sfdx-destruction",
     "description": "Destructive changes support for sfdx force:source:deploy",
-    "version": "1.0.0-beta.0",
+    "version": "1.0.0-beta.1",
     "author": "Andrew Goodman",
     "bugs": "https://github.com/gdman/sfdx-destruction/issues",
     "dependencies": {
@@ -38,7 +38,14 @@
     ],
     "homepage": "https://github.com/gdman/sfdx-destruction",
     "keywords": [
-        "sfdx-plugin", "salesforce", "sfdc", "sfdx", "plugin", "destructive", "changes", "deploy"
+        "sfdx-plugin",
+        "salesforce",
+        "sfdc",
+        "sfdx",
+        "plugin",
+        "destructive",
+        "changes",
+        "deploy"
     ],
     "license": "MIT",
     "oclif": {
