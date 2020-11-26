@@ -25,7 +25,9 @@ type PluginConfig = {
     destructiveChangesPostFile?: string;
 };
 
-const TEMP_PACKAGE_DIR = 'sourceDeploy_pkg';
+const TEMP_PACKAGE_DIR         = 'sourceDeploy_pkg';
+const DESTRUCTIVE_CHANGES_PRE  = 'destructiveChangesPre.xml';
+const DESTRUCTIVE_CHANGES_POST = 'destructiveChangesPost.xml';
 
 export const hook: HookFunction = async function(this, options): Promise<void> {
 
@@ -55,13 +57,13 @@ export const hook: HookFunction = async function(this, options): Promise<void> {
         const preFile = await getDestructiveChangesPreFile();
         if (preFile) {
             ux.log('Adding', preFile, 'to package');
-            copyDestructiveChanges(preFile, path.join(packageDirPath, 'destructiveChangesPre.xml'));
+            copyDestructiveChanges(preFile, path.join(packageDirPath, DESTRUCTIVE_CHANGES_PRE));
         }
 
         const postFile = await getDestructiveChangesPostFile();
         if (postFile) {
             ux.log('Adding', postFile, 'to package');
-            copyDestructiveChanges(postFile, path.join(packageDirPath, 'destructiveChangesPost.xml'));
+            copyDestructiveChanges(postFile, path.join(packageDirPath, DESTRUCTIVE_CHANGES_POST));
         }
     } catch (ex) {
         this.error(ex, { exit: 1 });
@@ -106,6 +108,11 @@ const getDestructiveChangesPostFile = async (): Promise<string> => {
 
 const getPackagePath = (mdapiFilePath: string): string => {
     const packageDirName = mdapiFilePath.split(path.sep).find(dir => dir.includes(TEMP_PACKAGE_DIR));
+
+    if (!packageDirName) {
+        throw new Error('Failed to locate package directory');
+    }
+
     return mdapiFilePath.substring(0, mdapiFilePath.indexOf(packageDirName) + packageDirName.length);
 };
 
