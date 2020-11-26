@@ -40,17 +40,17 @@ Recommended usage is to use the configuration file to store the locations of the
 
 `SFDX_DESTRUCTION_ENABLE` - true or false to enable or disable the plugin
 
-`SFDX_DESTRUCTIVE_PRE_FILE` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
+`SFDX_DESTRUCTION_PRE_FILE` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
 
-`SFDX_DESTRUCTIVE_POST_FILE` - path to the destructive changes post file i.e. deletions that will occur after the deployment
+`SFDX_DESTRUCTION_POST_FILE` - path to the destructive changes post file i.e. deletions that will occur after the deployment
 
 ## Project Configuration File (sfdx-project.json)
 
 `enabledByDefault` - true or false - will be used to determine whether the plugin should run if no environment variable is present (default: false - disabled)
 
-`destructiveChangesPreFile` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
+`preFile` - path to the destructive changes pre file i.e. deletions that will occur before the deployment
 
-`destructiveChangesPostFile` - path to the destructive changes post file i.e. deletions that will occur after the deployment
+`postFile` - path to the destructive changes post file i.e. deletions that will occur after the deployment
 
 ### Example:
 ```json
@@ -67,8 +67,8 @@ Recommended usage is to use the configuration file to store the locations of the
   "plugins": {
     "sfdx-destruction": {
       "enabledByDefault": false,
-      "destructiveChangesPreFile": "{path-to-destructiveChangesPre.xml}",
-      "destructiveChangesPostFile": "{path-to-destructiveChangesPost.xml}"
+      "preFile": "{path-to-destructiveChangesPre.xml}",
+      "postFile": "{path-to-destructiveChangesPost.xml}"
     }
   }
 }

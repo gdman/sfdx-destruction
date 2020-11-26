@@ -21,8 +21,8 @@ type PreDeployResult = {
 
 type PluginConfig = {
     enabledByDefault?: boolean;
-    destructiveChangesPreFile?: string;
-    destructiveChangesPostFile?: string;
+    preFile?: string;
+    postFile?: string;
 };
 
 const TEMP_PACKAGE_DIR         = 'sourceDeploy_pkg';
@@ -89,20 +89,20 @@ const isPluginEnabled = async (): Promise<boolean> => {
 };
 
 const getDestructiveChangesPreFile = async (): Promise<string> => {
-    if ('SFDX_DESTRUCTIVE_PRE_FILE' in process.env) {
-        return process.env['SFDX_DESTRUCTIVE_PRE_FILE'];
+    if ('SFDX_DESTRUCTION_PRE_FILE' in process.env) {
+        return process.env['SFDX_DESTRUCTION_PRE_FILE'];
     } else {
         const pluginConfig = await getPluginConfig();
-        return pluginConfig.destructiveChangesPreFile;
+        return pluginConfig.preFile;
     }
 };
 
 const getDestructiveChangesPostFile = async (): Promise<string> => {
-    if ('SFDX_DESTRUCTIVE_POST_FILE' in process.env) {
-        return process.env['SFDX_DESTRUCTIVE_POST_FILE'];
+    if ('SFDX_DESTRUCTION_POST_FILE' in process.env) {
+        return process.env['SFDX_DESTRUCTION_POST_FILE'];
     } else {
         const pluginConfig = await getPluginConfig();
-        return pluginConfig.destructiveChangesPostFile;
+        return pluginConfig.postFile;
     }
 };
 
