@@ -28,9 +28,9 @@ $ SFDX_DESTRUCTION_ENABLE=true sfdx force:source:deploy
 
 Destructive changes functionality is disabled by default and therefore must be enabled by environment variable or in the project configuration file.
 
-If the `SFDX_DESTRUCTION_ENABLE` environment variable is set, it will be used to determine whether to run the plugin (true or false and regardless of configuration file settings).
-Else the `plugins` -> `sfdx-destruction` -> `enabledByDefault` variable in the project configuration file will be used (if set).
-If neither is configured, the plugin will remain disabled.
+If the `SFDX_DESTRUCTION_ENABLE` environment variable is set, it will be used to determine whether to run the plugin (true or false and regardless of configuration file settings).  
+Else the `plugins` -> `sfdx-destruction` -> `enabledByDefault` variable in the project configuration file will be used (if set).  
+If neither is configured, the plugin will remain disabled.  
 
 The locations of the pre and post destructive changes files can also be specified by environment variable and/or configuration file. Environment variables take precedence over the configuration file. If neither is present, the plugin will have no effect.
 
