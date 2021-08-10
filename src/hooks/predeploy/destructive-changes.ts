@@ -52,6 +52,11 @@ export const hook: HookFunction = async function(this, options): Promise<void> {
         ux.log('SFDX destructive changes plugin enabled');
 
         const mdapiFilePath = options.result[mdapiElementNames[0]].mdapiFilePath;
+
+        if (!mdapiFilePath) {
+            throw new Error('sfdx-destruction is not compatible with the latest version of SFDX (7.112.1) - see Github plugin page for latest information - https://github.com/gdman/sfdx-destruction');
+        }
+
         const packageDirPath = getPackagePath(mdapiFilePath);
 
         const preFile = await getDestructiveChangesPreFile();
