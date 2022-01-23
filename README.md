@@ -1,15 +1,16 @@
 # Important Announcement
 
-As of SFDX version `7.112.1`, you will receive one of the following error messages:
+SFDX now contains destructive changes support. You no longer need to use this plugin.
 
-`ERROR running force:source:deploy:  sfdx-destruction is not compatible with the latest version of SFDX (7.112.1) - see Github plugin page for latest information - https://github.com/gdman/sfdx-destruction`
-`ERROR running force:source:deploy: Cannot read property 'split' of undefined`
+Use the following arguments:
 
-SFDX has fundamentally changed the way `sfdx force:source:deploy` is implemented and it is no longer possible to hook into the process in the same way as previous versions. It doesn't appear that the changes to `sfdx force:source:deploy` include destructive changes support and at this time, I can't see another way of implementing this plugin.
+`--predestructivechanges <filepath>`
 
-My initial thinking is that to make use of destructive changes, the source formatted metadata would need to be converted to MD API format and deployed using `sfdx force:mdapi:deploy`.
+`--postdestructivechanges <filepath>`
 
 ---
+---
+
 sfdx-destruction
 ================
 
